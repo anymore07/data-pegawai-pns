@@ -14,7 +14,14 @@ return new class extends Migration
         Schema::create('md_unit_kerja', function (Blueprint $table) {
             $table->id('ID_UNIT_KERJA');
             $table->string('NAMA_UNIT');
-            $table->string('LOKASI');
+            $table->string('LOKASI')->nullable();
+
+            // self reference (komponen tree)
+            $table->unsignedBigInteger('PARENT_ID')->nullable();
+            $table->foreign('PARENT_ID')
+                ->references('ID_UNIT_KERJA')
+                ->on('md_unit_kerja')
+                ->onDelete('cascade');
 
             $table->timestamps();
             $table->softDeletes();
@@ -25,6 +32,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('md_unit_kerja');
