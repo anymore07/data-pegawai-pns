@@ -13,12 +13,25 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+
+            // custom tambahan untuk sistem PNS
+            $table->string('username')->unique();
+            $table->string('role')->default('user'); // admin, operator, viewer
+            $table->string('pegawai_nip')->nullable();
+
+            // field bawaan laravel
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            // relasi
+            $table->foreign('pegawai_nip')
+                  ->references('NIP')
+                  ->on('tb_pegawai')
+                  ->onDelete('set null');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -42,8 +55,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };
