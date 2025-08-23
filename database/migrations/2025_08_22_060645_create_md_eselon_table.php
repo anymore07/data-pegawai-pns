@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('md_eselon', function (Blueprint $table) {
             $table->id('ID_ESELON');
-            $table->string('NAMA_ESELON', 50); // contoh: IIA, IIB, IIIA
+            $table->string('NAMA_ESELON', 50);
             $table->timestamps();
             $table->softDeletes();
             $table->string('CREATED_BY')->nullable();

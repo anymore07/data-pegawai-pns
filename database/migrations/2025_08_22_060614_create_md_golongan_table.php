@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('md_golongan', function (Blueprint $table) {
-            $table->bigIncrements('ID_GOLONGAN'); // AUTO_INCREMENT + PRIMARY KEY
+            $table->bigIncrements('ID_GOLONGAN');
             $table->string('NAMA_GOLONGAN', 50);
             $table->timestamps();
             $table->softDeletes();

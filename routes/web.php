@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     DashboardController, JabatanController, UnitKerjaController,
     GolonganController, EselonController, PegawaiController,
-    AlamatController, KotaController, AuthController
+    AlamatController, KotaController, AuthController, ArticleToolController
 };
 
 Route::middleware('guest')->group(function () {
@@ -62,3 +62,8 @@ Route::middleware('auth')->group(function () {
     // Logout (tetap di area auth)
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+
+
+Route::get('/artikel-tool', [ArticleToolController::class, 'index']);
+Route::post('/artikel-tool/run', [ArticleToolController::class, 'run'])->name('artikel.run');

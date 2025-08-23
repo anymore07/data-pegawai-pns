@@ -140,7 +140,6 @@
     </div>
 </div>
 
-<!-- Modal Form Pegawai -->
 <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -291,7 +290,6 @@
             width: '100%'
         });
 
-        // init sekali
         dtPegawai = $('#basic-datatable').DataTable({
             serverSide: true,
             processing: true,
@@ -334,18 +332,16 @@
             initComplete: function () { this.api().columns.adjust(); }
         });
 
-        // klik tombol = reload dengan filter yang dipilih
+     
         $('#btnFilter').on('click', function () {
-            dtPegawai.ajax.reload(null, true); // reset ke halaman 1
+            dtPegawai.ajax.reload(null, true);
         });
 
-        // kalau modal buka/tutup, rapikan kolom
         $('#modalForm').on('shown.bs.modal hidden.bs.modal', function () {
             if (dtPegawai) dtPegawai.columns.adjust();
         });
     });
 
-    // export tetap seperti sebelumnya
     function exportExcel() {
         const params = {
             filter_jk: $('#filter_jk').val(),
@@ -364,18 +360,13 @@
         $form[0].reset();
 
         $('input[name="old_nip"]').val('');
-
-        // reset semua select2 termasuk agama
         $('.select2-jk, .select2-golongan, .select2-eselon, .select2-jabatan, .select2-unit, .select2-kota, .select2-agama')
             .val(null).trigger('change');
-
-        // reset radio jenis kelamin
         $('input[name="jenis_kelamin"]').prop('checked', false);
-
         $('#foto').val('');
-
         $('#modalFormLabel').text('Form Pegawai - Tambah');
     }
+
     function deleteModal(nip) {
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -409,16 +400,10 @@
             $('input[name="tgl_lahir"]').val(data.TGL_LAHIR);
             $('input[name="no_telepon"]').val(data.NO_TELEPON);
             $('input[name="npwp"]').val(data.NPWP);
-
-            // set agama
             $('.select2-agama').val(data.AGAMA).trigger('change');
-
-            // set jenis kelamin (radio button)
             if (data.JENIS_KELAMIN) {
                 $(`input[name="jenis_kelamin"][value="${data.JENIS_KELAMIN}"]`).prop('checked', true);
             }
-
-            // set select lain
             $('.select2-golongan').val(data.ID_GOLONGAN).trigger('change');
             $('.select2-eselon').val(data.ID_ESELON).trigger('change');
             $('.select2-jabatan').val(data.ID_JABATAN).trigger('change');

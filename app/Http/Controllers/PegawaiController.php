@@ -18,35 +18,34 @@ class PegawaiController extends Controller
     {
         $data['title'] = 'Pegawai';
         $data['pegawai'] = DB::select("
-  SELECT p.*,
-         g.NAMA_GOLONGAN,
-         e.NAMA_ESELON,
-         j.NAMA_JABATAN,
-         u.NAMA_UNIT,
-         a.ALAMAT,
-         k.NAMA_KOTA AS TEMPAT_TUGAS
-  FROM tb_pegawai p
-  LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
-  LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
-  LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
-  LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
-  LEFT JOIN (
-      SELECT ta.*
-      FROM tb_alamat ta
-      JOIN (
-          SELECT NIP, MAX(ID_ALAMAT) AS ID_ALAMAT
-          FROM tb_alamat
-          WHERE DELETED_AT IS NULL
-          GROUP BY NIP
-      ) last ON last.NIP = ta.NIP AND last.ID_ALAMAT = ta.ID_ALAMAT
-      WHERE ta.DELETED_AT IS NULL
-  ) a ON a.NIP = p.NIP
-  LEFT JOIN md_kota k ON p.TEMPAT_TUGAS = k.ID_KOTA
-  WHERE p.DELETED_AT IS NULL
-    AND p.DELETED_BY IS NULL
-  ORDER BY p.NIP DESC
-");
-
+        SELECT p.*,
+                g.NAMA_GOLONGAN,
+                e.NAMA_ESELON,
+                j.NAMA_JABATAN,
+                u.NAMA_UNIT,
+                a.ALAMAT,
+                k.NAMA_KOTA AS TEMPAT_TUGAS
+        FROM tb_pegawai p
+        LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
+        LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
+        LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
+        LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
+        LEFT JOIN (
+            SELECT ta.*
+            FROM tb_alamat ta
+            JOIN (
+                SELECT NIP, MAX(ID_ALAMAT) AS ID_ALAMAT
+                FROM tb_alamat
+                WHERE DELETED_AT IS NULL
+                GROUP BY NIP
+            ) last ON last.NIP = ta.NIP AND last.ID_ALAMAT = ta.ID_ALAMAT
+            WHERE ta.DELETED_AT IS NULL
+        ) a ON a.NIP = p.NIP
+        LEFT JOIN md_kota k ON p.TEMPAT_TUGAS = k.ID_KOTA
+        WHERE p.DELETED_AT IS NULL
+            AND p.DELETED_BY IS NULL
+        ORDER BY p.NIP DESC
+        ");
 
         // Ambil data master untuk dropdown
         $data['golongan'] = DB::table('md_golongan')->whereNull('DELETED_AT')->get();
@@ -104,8 +103,7 @@ class PegawaiController extends Controller
             }
 
             if ($oldNip) {
-                // ===================== UPDATE =====================
-                // Kalau ganti NIP → cek apakah NIP baru sudah dipakai
+                // UPDATE
                 if ($oldNip != $nip) {
                     $cekNip = DB::table(
                         'tb_pegawai'
@@ -118,14 +116,14 @@ class PegawaiController extends Controller
                 DB::table('tb_pegawai')
                     ->where('NIP', $oldNip)
                     ->update(array_merge($payload, [
-                        'NIP' => $nip, // pastikan tetap update NIP baru
+                        'NIP' => $nip,
                         'UPDATED_AT' => now(),
                         'UPDATED_BY' => auth()->user()->name ?? 'Super Admin',
                     ]));
 
                 $msg = 'Berhasil mengubah data pegawai.';
             } else {
-                // ===================== INSERT =====================
+                // INSERT
                 $cekNip = DB::table('tb_pegawai')->where('NIP', $nip)->first();
                 if ($cekNip) {
                     return redirect('pegawai')->with('err_msg', 'Gagal menambahkan: NIP sudah digunakan!');
@@ -146,9 +144,6 @@ class PegawaiController extends Controller
             return redirect('pegawai')->with('err_msg', 'Gagal menyimpan: ' . $e->getMessage());
         }
     }
-
-
-
 
     public function delete($nip)
     {
@@ -175,14 +170,12 @@ class PegawaiController extends Controller
         $start = (int) $req->input('start', 0);
         $perPage = (int) $req->input('length', 10);
 
-        // === Filters (dari front-end) ===
-        $f_jk = $req->input('filter_jk');          // 'L' | 'P' | ''
-        $f_golongan = $req->input('filter_golongan');    // ID_GOLONGAN | ''
-        $f_eselon = $req->input('filter_eselon');      // ID_ESELON | ''
-        $f_jabatan = $req->input('filter_jabatan');     // ID_JABATAN | ''
-        $f_tempat = $req->input('filter_tempat_tugas'); // ID_KOTA | ''
+        $f_jk = $req->input('filter_jk');
+        $f_golongan = $req->input('filter_golongan');
+        $f_eselon = $req->input('filter_eselon');
+        $f_jabatan = $req->input('filter_jabatan');
+        $f_tempat = $req->input('filter_tempat_tugas');
 
-        // gunakan bindings biar aman dari SQL injection
         $conds = ["p.DELETED_AT IS NULL", "p.DELETED_BY IS NULL"];
         $binds = [];
 
@@ -208,7 +201,6 @@ class PegawaiController extends Controller
             $binds[] = $f_jabatan;
         }
         if ($f_tempat !== null && $f_tempat !== '') {
-            // p.TEMPAT_TUGAS menyimpan ID_KOTA
             $conds[] = "p.TEMPAT_TUGAS = ?";
             $binds[] = $f_tempat;
         }
@@ -223,41 +215,40 @@ class PegawaiController extends Controller
 
         // Data rows
         $sql = "
-SELECT 
-    p.*, 
-    g.NAMA_GOLONGAN, 
-    e.NAMA_ESELON, 
-    j.NAMA_JABATAN, 
-    u.NAMA_UNIT, 
-    a.ALAMAT,
-    k.NAMA_KOTA AS TEMPAT_TUGAS,
-    p.TEMPAT_TUGAS AS ID_KOTA
-FROM tb_pegawai p
-LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
-LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
-LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
-LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
-/* === ALAMAT TERBARU SAJA === */
-LEFT JOIN (
-    SELECT ta.*
-    FROM tb_alamat ta
-    JOIN (
-        SELECT NIP, MAX(ID_ALAMAT) AS ID_ALAMAT
-        FROM tb_alamat
-        WHERE DELETED_AT IS NULL
-        GROUP BY NIP
-    ) last ON last.NIP = ta.NIP AND last.ID_ALAMAT = ta.ID_ALAMAT
-    WHERE ta.DELETED_AT IS NULL
-) a ON a.NIP = p.NIP
-LEFT JOIN md_kota       k ON k.ID_KOTA       = p.TEMPAT_TUGAS
-$where
-$orderBy
-LIMIT $start, $perPage
-";
+        SELECT 
+            p.*, 
+            g.NAMA_GOLONGAN, 
+            e.NAMA_ESELON, 
+            j.NAMA_JABATAN, 
+            u.NAMA_UNIT, 
+            a.ALAMAT,
+            k.NAMA_KOTA AS TEMPAT_TUGAS,
+            p.TEMPAT_TUGAS AS ID_KOTA
+        FROM tb_pegawai p
+        LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
+        LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
+        LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
+        LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
+        /* === ALAMAT TERBARU SAJA === */
+        LEFT JOIN (
+            SELECT ta.*
+            FROM tb_alamat ta
+            JOIN (
+                SELECT NIP, MAX(ID_ALAMAT) AS ID_ALAMAT
+                FROM tb_alamat
+                WHERE DELETED_AT IS NULL
+                GROUP BY NIP
+            ) last ON last.NIP = ta.NIP AND last.ID_ALAMAT = ta.ID_ALAMAT
+            WHERE ta.DELETED_AT IS NULL
+        ) a ON a.NIP = p.NIP
+        LEFT JOIN md_kota       k ON k.ID_KOTA       = p.TEMPAT_TUGAS
+        $where
+        $orderBy
+        LIMIT $start, $perPage
+        ";
 
         $results = DB::select($sql, $binds);
 
-        // Total (tanpa LIMIT) — cukup di tb_pegawai, karena filter by FK ada di kolom p.*
         $sqlCount = "SELECT COUNT(1) AS TOTAL FROM tb_pegawai p $where";
         $Tot = DB::selectOne($sqlCount, $binds)->TOTAL ?? 0;
 
@@ -274,10 +265,10 @@ LIMIT $start, $perPage
                 'ESELON' => $item->NAMA_ESELON,
                 'JABATAN' => $item->NAMA_JABATAN,
                 'UNIT_KERJA' => $item->NAMA_UNIT,
-                'TEMPAT_TUGAS' => $item->TEMPAT_TUGAS ?? '-', // ini nama kota
-                'AGAMA' => $item->AGAMA,
+                'TEMPAT_TUGAS' => $item->TEMPAT_TUGAS ?? '-',
                 'NO_TELEPON' => $item->NO_TELEPON,
                 'NPWP' => $item->NPWP,
+                'AGAMA' => $item->AGAMA,
                 'ALAMAT' => $item->ALAMAT,
                 'FOTO' => $item->FOTO,
                 'ACTION_BUTTON' => '
@@ -302,17 +293,14 @@ LIMIT $start, $perPage
         ], 200);
     }
 
-
     public function export_excel(Request $req)
     {
-        // ambil filter dari request
         $f_jk = $req->input('filter_jk');
         $f_golongan = $req->input('filter_golongan');
         $f_eselon = $req->input('filter_eselon');
         $f_jabatan = $req->input('filter_jabatan');
         $f_tempat = $req->input('filter_tempat_tugas');
 
-        // WHERE + bindings (aman dari injection)
         $conds = ["p.DELETED_AT IS NULL", "p.DELETED_BY IS NULL"];
         $binds = [];
 
@@ -340,35 +328,34 @@ LIMIT $start, $perPage
         $where = 'WHERE ' . implode(' AND ', $conds);
 
         $sql = "
-SELECT 
-    p.NIP, p.NAMA_PEGAWAI, p.TEMPAT_LAHIR, p.TGL_LAHIR, p.JENIS_KELAMIN,
-    g.NAMA_GOLONGAN, e.NAMA_ESELON, j.NAMA_JABATAN, u.NAMA_UNIT,
-    k.NAMA_KOTA AS TEMPAT_TUGAS, p.AGAMA, p.NO_TELEPON, p.NPWP, a.ALAMAT
-FROM tb_pegawai p
-LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
-LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
-LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
-LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
-/* === ALAMAT TERBARU SAJA === */
-LEFT JOIN (
-    SELECT ta.*
-    FROM tb_alamat ta
-    JOIN (
-        SELECT NIP, MAX(ID_ALAMAT) AS ID_ALAMAT
-        FROM tb_alamat
-        WHERE DELETED_AT IS NULL
-        GROUP BY NIP
-    ) last ON last.NIP = ta.NIP AND last.ID_ALAMAT = ta.ID_ALAMAT
-    WHERE ta.DELETED_AT IS NULL
-) a ON a.NIP = p.NIP
-LEFT JOIN md_kota       k ON p.TEMPAT_TUGAS  = k.ID_KOTA
-$where
-ORDER BY p.NIP DESC
-";
+        SELECT 
+            p.NIP, p.NAMA_PEGAWAI, p.TEMPAT_LAHIR, p.TGL_LAHIR, p.JENIS_KELAMIN,
+            g.NAMA_GOLONGAN, e.NAMA_ESELON, j.NAMA_JABATAN, u.NAMA_UNIT,
+            k.NAMA_KOTA AS TEMPAT_TUGAS, p.AGAMA, p.NO_TELEPON, p.NPWP, a.ALAMAT
+        FROM tb_pegawai p
+        LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
+        LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
+        LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
+        LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
+        /* === ALAMAT TERBARU SAJA === */
+        LEFT JOIN (
+            SELECT ta.*
+            FROM tb_alamat ta
+            JOIN (
+                SELECT NIP, MAX(ID_ALAMAT) AS ID_ALAMAT
+                FROM tb_alamat
+                WHERE DELETED_AT IS NULL
+                GROUP BY NIP
+            ) last ON last.NIP = ta.NIP AND last.ID_ALAMAT = ta.ID_ALAMAT
+            WHERE ta.DELETED_AT IS NULL
+        ) a ON a.NIP = p.NIP
+        LEFT JOIN md_kota       k ON p.TEMPAT_TUGAS  = k.ID_KOTA
+        $where
+        ORDER BY p.NIP DESC
+        ";
 
         $rows = DB::select($sql, $binds);
 
-        // Spreadsheet
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -390,7 +377,6 @@ ORDER BY p.NIP DESC
             'Alamat'
         ];
 
-        // Mapping header -> field di SELECT
         $map = [
             'NIP' => 'NIP',
             'Nama' => 'NAMA_PEGAWAI',
@@ -401,14 +387,13 @@ ORDER BY p.NIP DESC
             'Eselon' => 'NAMA_ESELON',
             'Jabatan' => 'NAMA_JABATAN',
             'Unit Kerja' => 'NAMA_UNIT',
-            'Tempat Tugas' => 'TEMPAT_TUGAS',   // alias nama kota
+            'Tempat Tugas' => 'TEMPAT_TUGAS',
             'Agama' => 'AGAMA',
             'No Telp' => 'NO_TELEPON',
             'NPWP' => 'NPWP',
             'Alamat' => 'ALAMAT',
         ];
 
-        // Tulis header + bold
         $col = 1;
         foreach ($headers as $h) {
             $cell = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col) . '1';
@@ -442,16 +427,13 @@ ORDER BY p.NIP DESC
             $row++;
         }
 
-        // Auto width kolom
         foreach (range(1, count($headers)) as $c) {
             $sheet->getColumnDimensionByColumn($c)->setAutoSize(true);
         }
 
-        // Output file
         $fileName = "pegawai_export_" . date('Ymd_His') . ".xlsx";
         $writer = new Xlsx($spreadsheet);
 
-        // header untuk download
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
         $writer->save('php://output');

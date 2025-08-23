@@ -10,7 +10,6 @@ class DashboardController extends Controller
 
     public function __construct()
     {
-        // pastikan hanya user yang sudah login bisa akses
         $this->middleware('auth');
     }
     public function index()

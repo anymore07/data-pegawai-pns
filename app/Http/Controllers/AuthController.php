@@ -10,7 +10,6 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        // Jika sudah login, langsung lempar ke dashboard
         if (Auth::check()) {
             return redirect()->route('/');
         }
@@ -19,7 +18,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // Validasi input
         $credentials = $request->validate([
             'email'    => ['required','email'],
             'password' => ['required','string','min:6'],
@@ -32,10 +30,8 @@ class AuthController extends Controller
 
         $remember = $request->boolean('remember');
 
-        // Coba login
         if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate(); // proteksi session fixation
-            // Optional: redirect ke intended url (jika pakai middleware auth)
+            $request->session()->regenerate(); 
             return redirect()->intended(route('dashboard'))->with('resp_msg', 'Berhasil masuk');
         }
 

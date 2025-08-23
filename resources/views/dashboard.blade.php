@@ -13,7 +13,6 @@
                 </div>
             </div>
         </div>
-        {{-- ====== WELCOME / HERO CARD ====== --}}
         <div class="row clearfix">
             <div class="col-12">
                 <div class="card shadow-sm border-0" style="background-color:#6f42c1; color:#fff;">
@@ -42,7 +41,6 @@
                 </div>
             </div>
         </div>
-        {{-- ====== QUICK ACTIONS ====== --}}
         <div class="row clearfix">
             <div class="col-lg-8">
                 <div class="card">
@@ -95,16 +93,13 @@
                                 </form>
                             </div>
                         </div>
-
                         <hr>
                         <small class="text-muted">Tips: gunakan tombol di atas untuk akses cepat ke menu yang paling
                             sering dipakai.</small>
                     </div>
                 </div>
             </div>
-            {{-- ====== ACTIVITY / ANNOUNCEMENTS ====== --}}
             <div class="col-lg-4">
-
                 <div class="card">
                     <div class="header">
                         <h2>Pengumuman</h2>
@@ -120,7 +115,6 @@
     </div>
 </div>
 
-{{-- Greeting dinamis (pagi/siang/sore/malam) --}}
 <script>
     (function () {
         var h = new Date().getHours(), g = 'Selamat datang';

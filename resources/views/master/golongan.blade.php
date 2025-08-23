@@ -131,12 +131,12 @@
             '_token': $('meta[name="csrf-token"]').attr('content')
         }
         var dataColumn = [
-        {
-            data: 'NAMA_GOLONGAN'
-        },
-        {
-            data: 'ACTION_BUTTON'
-        }
+            {
+                data: 'NAMA_GOLONGAN'
+            },
+            {
+                data: 'ACTION_BUTTON'
+            }
         ]
 
         processingDataTable(element, totPagesLoad, dataUrl, dataBody, dataColumn)

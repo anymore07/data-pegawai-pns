@@ -21,7 +21,7 @@ return new class extends Migration {
                 ->on('md_kota')
                 ->nullOnDelete();
 
-            // self reference (komponen tree)
+            // komponen tree
             $table->unsignedBigInteger('PARENT_ID')->nullable();
             $table->foreign('PARENT_ID')
                 ->references('ID_UNIT_KERJA')

@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->date('TGL_LAHIR')->nullable();
             $table->enum('JENIS_KELAMIN', ['L', 'P']);
 
-            // Relasi manual
             $table->unsignedBigInteger('ID_GOLONGAN')->nullable();
             $table->foreign('ID_GOLONGAN')
                 ->references('ID_GOLONGAN')
