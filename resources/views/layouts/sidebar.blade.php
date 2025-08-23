@@ -1,8 +1,8 @@
 <!-- Page Loader -->
 <div class="page-loader-wrapper">
     <div class="loader">
-        <div class="m-t-30"><img src="{{ asset('assets/images/logo-icon.svg') }}" width="48" height="48"
-                alt="Iconic"></div>
+        <div class="m-t-30"><img src="{{ asset('assets/images/logo-icon.svg') }}" width="48" height="48" alt="Iconic">
+        </div>
         <p>Please wait...</p>
     </div>
 </div>
@@ -91,7 +91,12 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="page-login.html" class="icon-menu"><i class="fa fa-power-off"></i></a>
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button>
+                                <i class="fa fa-power-off"></i>
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -108,8 +113,8 @@
                 alt="User Profile Picture">
             <div class="dropdown">
                 <span>Welcome,</span>
-                <a href="javascript:void(0);" class="dropdown-toggle user-name"><strong>Pamela
-                        Petrus</strong></a>
+                <a href="javascript:void(0);" class="user-name"><strong>Super
+                        Admin</strong></a>
             </div>
             <hr>
         </div>
@@ -130,8 +135,7 @@
                             </ul>
                         </li>
 
-                        <li
-                            class="{{ in_array($title, ['Jabatan', 'Unit Kerja']) ? 'active' : '' }}">
+                        <li class="{{ in_array($title, ['Jabatan', 'Unit Kerja']) ? 'active' : '' }}">
                             <a href="#App" class="has-arrow"><i class="fa fa-th-large"></i><span>Master
                                     Data</span></a>
                             <ul>
@@ -165,14 +169,14 @@
 
 
 <script>
-    $(document).on('click', '.has-arrow', function(e) {
+    $(document).on('click', '.has-arrow', function (e) {
         e.preventDefault();
 
         const $link = $(this);
         const $li = $link.closest('li');
         const $submenu = $link.next('ul');
 
-        $('.has-arrow').not($link).each(function() {
+        $('.has-arrow').not($link).each(function () {
             const otherSub = $(this).next('ul');
             otherSub.removeClass('in').css('height', '0px').attr('aria-expanded', 'false');
             $(this).closest('li').removeClass('active');

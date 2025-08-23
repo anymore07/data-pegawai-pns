@@ -1,281 +1,159 @@
 @include('layouts.sidebar')
+
 <div id="main-content">
     <div class="container-fluid">
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <h2>Analytical</h2>
+                    <h2>Dashboard</h2>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-dashboard"></i></a></li>
-                        <li class="breadcrumb-item">Dashboard</li>
-                        <li class="breadcrumb-item active">Analytical</li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}"><i class="fa fa-dashboard"></i></a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
                     </ul>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="d-flex flex-row-reverse">
-                        <div class="page_action">
-                            <button type="button" class="btn btn-primary"><i class="fa fa-download"></i> Download
-                                report</button>
-                            <button type="button" class="btn btn-secondary"><i class="fa fa-send"></i> Send
-                                report</button>
-                        </div>
-                        <div class="p-2 d-flex">
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-
-        <div class="row clearfix row-deck">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card number-chart">
+        {{-- ====== WELCOME / HERO CARD ====== --}}
+        <div class="row clearfix">
+            <div class="col-12">
+                <div class="card shadow-sm border-0" style="background-color:#6f42c1; color:#fff;">
                     <div class="body">
-                        <span class="text-uppercase">New Sessions</span>
-                        <h4 class="mb-0 mt-2">22,500 <i class="fa fa-level-up font-12"></i></h4>
-                        <small class="text-muted">Analytics for last week</small>
-                    </div>
-                    <div class="sparkline" data-type="line" data-spot-Radius="0" data-offset="90" data-width="100%"
-                        data-height="50px" data-line-Width="1" data-line-Color="#39afa6" data-fill-Color="#73cec7">
-                        4,1,5,2,7,3,4</div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card number-chart">
-                    <div class="body">
-                        <span class="text-uppercase">Goal Completions</span>
-                        <h4 class="mb-0 mt-2">1,12,500</h4>
-                        <small class="text-muted">Analytics for last week</small>
-                    </div>
-                    <div class="sparkline" data-type="line" data-spot-Radius="0" data-offset="90" data-width="100%"
-                        data-height="50px" data-line-Width="1" data-line-Color="#ffa901" data-fill-Color="#efc26b">
-                        1,4,2,3,6,2</div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card number-chart">
-                    <div class="body">
-                        <span class="text-uppercase">TIME ON SITE</span>
-                        <h4 class="mb-0 mt-2">1,070</h4>
-                        <small class="text-muted">Analytics for last week</small>
-                    </div>
-                    <div class="sparkline" data-type="line" data-spot-Radius="0" data-offset="90" data-width="100%"
-                        data-height="50px" data-line-Width="1" data-line-Color="#38c172" data-fill-Color="#84d4a6">
-                        1,4,2,3,1,5</div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card number-chart">
-                    <div class="body">
-                        <span class="text-uppercase">BOUNCE RATE</span>
-                        <h4 class="mb-0 mt-2">10K</h4>
-                        <small class="text-muted">Analytics for last week</small>
-                    </div>
-                    <div class="sparkline" data-type="line" data-spot-Radius="0" data-offset="90" data-width="100%"
-                        data-height="50px" data-line-Width="1" data-line-Color="#226fd8" data-fill-Color="#7ea7de">
-                        1,3,5,1,4,2</div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card top_widget">
-                    <div class="body">
-                        <div class="icon"><i class="fa fa-flag"></i> </div>
-                        <div class="content">
-                            <div class="text mb-2 text-uppercase">Sessions</div>
-                            <h4 class="number mb-0">3,251 <span class="font-12 text-muted"><i
-                                        class="fa fa-level-up"></i> 13%</span></h4>
-                            <small class="text-muted">Analytics for last week</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card top_widget">
-                    <div class="body">
-                        <div class="icon"><i class="fa fa-users"></i> </div>
-                        <div class="content">
-                            <div class="text mb-2 text-uppercase">Users</div>
-                            <h4 class="number mb-0">25K <span class="font-12 text-muted"><i
-                                        class="fa fa-level-down"></i> 7%</span></h4>
-                            <small class="text-muted">Analytics for last week</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card top_widget">
-                    <div class="body">
-                        <div class="icon"><i class="fa fa-user"></i> </div>
-                        <div class="content">
-                            <div class="text mb-2 text-uppercase">VISITORS</div>
-                            <h4 class="number mb-0">21K <span class="font-12 text-muted"><i
-                                        class="fa fa-level-down"></i> 4%</span></h4>
-                            <small class="text-muted">Analytics for last week</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card top_widget">
-                    <div class="body">
-                        <div class="icon"><i class="fa fa-thumbs-up"></i> </div>
-                        <div class="content">
-                            <div class="text mb-2 text-uppercase">LIKES</div>
-                            <h4 class="number mb-0">53K <span class="font-12 text-muted"><i
-                                        class="fa fa-level-up"></i> 15%</span></h4>
-                            <small class="text-muted">Analytics for last week</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row clearfix row-deck">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="header">
-                        <h2>Google Analytics Dashboard</h2>
-                        <ul class="header-dropdown">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
-                                    role="button" aria-haspopup="true" aria-expanded="false"></a>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="javascript:void(0);">Action</a></li>
-                                    <li><a href="javascript:void(0);">Another Action</a></li>
-                                    <li><a href="javascript:void(0);">Something else</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <select class="custom-select custom-select-sm">
-                                    <option>Open this select menu</option>
-                                    <option value="1">Sessions</option>
-                                    <option value="2">Users</option>
-                                    <option selected value="3">Page Views</option>
-                                    <option value="4">Bounce Rate</option>
-                                    <option value="5">Location</option>
-                                    <option value="6">Pages</option>
-                                    <option value="7">Referrers</option>
-                                    <option value="8">Searches</option>
-                                    <option value="9">Technology</option>
-                                    <option value="10">404 Errors</option>
-                                </select>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div class="mb-2">
+                                <div id="greeting" class="text-uppercase small-12 text-light">Selamat datang</div>
+                                <h3 class="mb-1 text-white">
+                                    {{ auth()->user()->name ?? 'Admin' }}
+                                </h3>
+                                <div class="text-light">
+                                    Kamu login sebagai <strong>{{ $kpi['role'] ?? 'Admin' }}</strong>.
+                                    Kelola master data dan pantau aktivitas terakhir di bawah ini.
+                                </div>
                             </div>
-                            <div class="d-flex">
-                                <button type="button" class="btn btn-outline-primary mr-2"><i
-                                        class="fa fa-download"></i> Download report</button>
-                                <button type="button" class="btn btn-outline-secondary"><i class="fa fa-send"></i>
-                                    Send report</button>
+                            <div class="mb-2">
+                                <a href="{{ url('pegawai') }}" class="btn btn-light mr-2">
+                                    <i class="fa fa-users"></i> Kelola Pegawai
+                                </a>
+                                <a href="{{ url('jabatan') }}" class="btn btn-outline-light">
+                                    <i class="fa fa-briefcase"></i> Kelola Jabatan
+                                </a>
                             </div>
                         </div>
-                        <div id="Google-Analytics-Dashboard" style="height: 230px"></div>
                     </div>
                 </div>
             </div>
         </div>
+        {{-- ====== QUICK ACTIONS ====== --}}
+        <div class="row clearfix">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="header">
+                        <h2>Quick Actions</h2>
+                        <ul class="header-dropdown">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"></a>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="{{ url('pegawai') }}">Pegawai</a></li>
+                                    <li><a href="{{ url('jabatan') }}">Jabatan</a></li>
+                                    <li><a href="{{ url('unit-kerja') }}">Unit Kerja</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <a href="{{ url('pegawai') }}" class="btn btn-block btn-outline-primary">
+                                    <i class="fa fa-user-plus"></i> Tambah Pegawai
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{{ url('pegawai') }}" class="btn btn-block btn-outline-info">
+                                    <i class="fa fa-file-excel-o"></i> Export Pegawai
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{{ url('kota') }}" class="btn btn-block btn-outline-secondary">
+                                    <i class="fa fa-map-marker"></i> Master Kota
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{{ url('jabatan') }}" class="btn btn-block btn-outline-warning">
+                                    <i class="fa fa-briefcase"></i> Master Jabatan
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{{ url('unit-kerja') }}" class="btn btn-block btn-outline-success">
+                                    <i class="fa fa-sitemap"></i> Master Unit Kerja
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-block btn-outline-danger">
+                                        <i class="fa fa-sign-out"></i> Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
 
-        <div class="row clearfix row-deck">
-            <div class="col-lg-4 col-md-12">
-                <div class="card">
-                    <div class="header">
-                        <h2>Use by Device</h2>
-                        <ul class="header-dropdown">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
-                                    role="button" aria-haspopup="true" aria-expanded="false"></a>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="javascript:void(0);">Action</a></li>
-                                    <li><a href="javascript:void(0);">Another Action</a></li>
-                                    <li><a href="javascript:void(0);">Something else</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="body">
-                        <div id="Use-by-Device" style="height: 16rem"></div>
+                        <hr>
+                        <small class="text-muted">Tips: gunakan tombol di atas untuk akses cepat ke menu yang paling
+                            sering dipakai.</small>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-12">
+            {{-- ====== ACTIVITY / ANNOUNCEMENTS ====== --}}
+            <div class="col-lg-4">
                 <div class="card">
                     <div class="header">
-                        <h2>Use by Audience</h2>
-                        <ul class="header-dropdown">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
-                                    role="button" aria-haspopup="true" aria-expanded="false"></a>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="javascript:void(0);">Action</a></li>
-                                    <li><a href="javascript:void(0);">Another Action</a></li>
-                                    <li><a href="javascript:void(0);">Something else</a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                        <h2>Aktivitas Terbaru</h2>
                     </div>
                     <div class="body">
-                        <div id="Use-by-Audience" style="height: 16rem"></div>
+                        @forelse(($activities ?? []) as $a)
+                            <div class="media mb-3">
+                                <div class="align-self-center mr-3">
+                                    <span class="badge badge-{{ $a['color'] ?? 'primary' }}"><i
+                                            class="fa {{ $a['icon'] ?? 'fa-info' }}"></i></span>
+                                </div>
+                                <div class="media-body">
+                                    <h6 class="mt-0 mb-1">{{ $a['title'] ?? '-' }}</h6>
+                                    <div class="text-muted small">{{ $a['desc'] ?? '' }}</div>
+                                    <div class="text-muted small"><i class="fa fa-clock-o"></i> {{ $a['time'] ?? '' }}</div>
+                                </div>
+                            </div>
+                            @if(!$loop->last)
+                            <hr class="my-2">@endif
+                        @empty
+                            <div class="text-muted">Belum ada aktivitas.</div>
+                        @endforelse
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-12">
+
                 <div class="card">
                     <div class="header">
-                        <h2>Use by Browser</h2>
-                        <ul class="header-dropdown">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
-                                    role="button" aria-haspopup="true" aria-expanded="false"></a>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="javascript:void(0);">Action</a></li>
-                                    <li><a href="javascript:void(0);">Another Action</a></li>
-                                    <li><a href="javascript:void(0);">Something else</a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                        <h2>Pengumuman</h2>
                     </div>
                     <div class="body">
-                        <table class="table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Browser</th>
-                                    <th>Sessions</th>
-                                    <th>Bounce rate</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Chrome</td>
-                                    <td>23,233 <i class="fa fa-level-up"></i></td>
-                                    <td>47.12%</td>
-                                </tr>
-                                <tr>
-                                    <td>Firefox</td>
-                                    <td>13,901 <i class="fa fa-level-up"></i></td>
-                                    <td>33.02%</td>
-                                </tr>
-                                <tr>
-                                    <td>Safari</td>
-                                    <td>3,015 <i class="fa fa-level-up"></i></td>
-                                    <td>24.12%</td>
-                                </tr>
-                                <tr>
-                                    <td>Edge</td>
-                                    <td>233 <i class="fa fa-level-down"></i></td>
-                                    <td>17.33%</td>
-                                </tr>
-                                <tr>
-                                    <td>Opera</td>
-                                    <td>821 <i class="fa fa-level-down"></i></td>
-                                    <td>7.12%</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="alert alert-info">
+                            <i class="fa fa-bullhorn"></i> Silakan perbarui data pegawai setiap awal bulan.
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{{-- Greeting dinamis (pagi/siang/sore/malam) --}}
+<script>
+    (function () {
+        var h = new Date().getHours(), g = 'Selamat datang';
+        if (h >= 4 && h < 11) g = 'Selamat pagi';
+        else if (h >= 11 && h < 15) g = 'Selamat siang';
+        else if (h >= 15 && h < 19) g = 'Selamat sore';
+        else g = 'Selamat malam';
+        var el = document.getElementById('greeting');
+        if (el) el.textContent = g;
+    })();
+</script>
+@include('layouts.footer')

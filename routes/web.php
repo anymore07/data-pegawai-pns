@@ -1,58 +1,67 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\JabatanController;
-use App\Http\Controllers\UnitKerjaController;
-use App\Http\Controllers\GolonganController;
-use App\Http\Controllers\EselonController;
-use App\Http\Controllers\PegawaiController;
-use App\Http\Controllers\AlamatController;
-use App\Http\Controllers\KotaController;
+use App\Http\Controllers\{
+    DashboardController, JabatanController, UnitKerjaController,
+    GolonganController, EselonController, PegawaiController,
+    AlamatController, KotaController, AuthController
+};
 
-// Web Route
-Route::get('/', [DashboardController::class, 'index']);
+/* ==== GUEST (belum login) ==== */
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('login.post')->middleware('throttle:5,1');
+});
 
-//Jabatan Routes
-Route::get('jabatan', [JabatanController::class, 'index']);
-Route::post('jabatan/submit', [JabatanController::class, 'save']);
-Route::get('jabatan/delete/{id}', [JabatanController::class, 'delete']);
-Route::post('jabatan/all-data', [JabatanController::class, 'get_all_data']);
+/* ==== AUTH (sudah login) ==== */
+Route::middleware('auth')->group(function () {
+    // Dashboard / root
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-// Unit Kerja Routes
-Route::get('unit-kerja', [UnitKerjaController::class, 'index']);
-Route::post('unit-kerja/submit', [UnitKerjaController::class, 'save']);
-Route::get('unit-kerja/delete/{id}', [UnitKerjaController::class, 'delete']);
-Route::post('unit-kerja/all-data', [UnitKerjaController::class, 'get_all_data']);
+    // Jabatan
+    Route::get('jabatan', [JabatanController::class, 'index']);
+    Route::post('jabatan/submit', [JabatanController::class, 'save']);
+    Route::get('jabatan/delete/{id}', [JabatanController::class, 'delete']);
+    Route::post('jabatan/all-data', [JabatanController::class, 'get_all_data']);
 
-// Golongan Routes
-Route::get('golongan', [GolonganController::class, 'index']);
-Route::post('golongan/submit', [GolonganController::class, 'save']);
-Route::get('golongan/delete/{id}', [GolonganController::class, 'delete']);
-Route::post('golongan/all-data', [GolonganController::class, 'get_all_data']);
+    // Unit Kerja
+    Route::get('unit-kerja', [UnitKerjaController::class, 'index']);
+    Route::post('unit-kerja/submit', [UnitKerjaController::class, 'save']);
+    Route::get('unit-kerja/delete/{id}', [UnitKerjaController::class, 'delete']);
+    Route::post('unit-kerja/all-data', [UnitKerjaController::class, 'get_all_data']);
 
-// Eselon Routes
-Route::get('eselon', [EselonController::class, 'index']);
-Route::post('eselon/submit', [EselonController::class, 'save']);
-Route::get('eselon/delete/{id}', [EselonController::class, 'delete']);
-Route::post('eselon/all-data', [EselonController::class, 'get_all_data']);
+    // Golongan
+    Route::get('golongan', [GolonganController::class, 'index']);
+    Route::post('golongan/submit', [GolonganController::class, 'save']);
+    Route::get('golongan/delete/{id}', [GolonganController::class, 'delete']);
+    Route::post('golongan/all-data', [GolonganController::class, 'get_all_data']);
 
-// Pegawai Routes
-Route::get('pegawai', [PegawaiController::class, 'index']);
-Route::post('pegawai/submit', [PegawaiController::class, 'save']);
-Route::get('pegawai/delete/{nip}', [PegawaiController::class, 'delete']);
-Route::post('pegawai/all-data', [PegawaiController::class, 'get_all_data']);
-Route::get('pegawai/export-excel', [PegawaiController::class, 'export_excel']);
+    // Eselon
+    Route::get('eselon', [EselonController::class, 'index']);
+    Route::post('eselon/submit', [EselonController::class, 'save']);
+    Route::get('eselon/delete/{id}', [EselonController::class, 'delete']);
+    Route::post('eselon/all-data', [EselonController::class, 'get_all_data']);
 
+    // Pegawai
+    Route::get('pegawai', [PegawaiController::class, 'index']);
+    Route::post('pegawai/submit', [PegawaiController::class, 'save']);
+    Route::get('pegawai/delete/{nip}', [PegawaiController::class, 'delete']);
+    Route::post('pegawai/all-data', [PegawaiController::class, 'get_all_data']);
+    Route::get('pegawai/export-excel', [PegawaiController::class, 'export_excel']);
 
-// Alamat Pegawai Routes
-Route::get('pegawai/alamat/{nip}', [AlamatController::class, 'index']);
-Route::post('alamat/save', [AlamatController::class, 'save']);
-Route::get('alamat/delete/{id}', [AlamatController::class, 'delete']);
-Route::post('alamat/all-data/{nip}', [AlamatController::class, 'get_all_data']);
+    // Alamat Pegawai
+    Route::get('pegawai/alamat/{nip}', [AlamatController::class, 'index']);
+    Route::post('alamat/save', [AlamatController::class, 'save']);
+    Route::get('alamat/delete/{id}', [AlamatController::class, 'delete']);
+    Route::post('alamat/all-data/{nip}', [AlamatController::class, 'get_all_data']);
 
-// Kota Routes
-Route::get('kota', [KotaController::class, 'index']);
-Route::post('kota/submit', [KotaController::class, 'save']);
-Route::get('kota/delete/{id}', [KotaController::class, 'delete']);
-Route::post('kota/all-data', [KotaController::class, 'get_all_data']);
+    // Kota
+    Route::get('kota', [KotaController::class, 'index']);
+    Route::post('kota/submit', [KotaController::class, 'save']);
+    Route::get('kota/delete/{id}', [KotaController::class, 'delete']);
+    Route::post('kota/all-data', [KotaController::class, 'get_all_data']);
+
+    // Logout (tetap di area auth)
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
