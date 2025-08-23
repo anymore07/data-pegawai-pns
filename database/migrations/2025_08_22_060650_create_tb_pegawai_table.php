@@ -29,6 +29,13 @@ return new class extends Migration {
             $table->unsignedBigInteger('ID_JABATAN')->nullable();
             $table->foreign('ID_JABATAN')->references('ID_JABATAN')->on('md_jabatan')->nullOnDelete();
 
+            $table->unsignedBigInteger('TEMPAT_TUGAS')->nullable();
+            $table->foreign('TEMPAT_TUGAS')
+                ->references('ID_KOTA')
+                ->on('md_kota')
+                ->nullOnDelete();
+
+
             $table->string('AGAMA', 100)->nullable();
             $table->string('NO_TELEPON', 50)->nullable();
             $table->string('NPWP', 50)->nullable();

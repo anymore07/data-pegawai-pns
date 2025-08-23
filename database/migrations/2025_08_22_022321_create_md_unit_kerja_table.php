@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,7 +13,13 @@ return new class extends Migration
         Schema::create('md_unit_kerja', function (Blueprint $table) {
             $table->id('ID_UNIT_KERJA');
             $table->string('NAMA_UNIT');
-            $table->string('LOKASI')->nullable();
+
+            // Kolom relasi ke kota
+            $table->unsignedBigInteger('LOKASI')->nullable();
+            $table->foreign('LOKASI')
+                ->references('ID_KOTA')
+                ->on('md_kota')
+                ->nullOnDelete();
 
             // self reference (komponen tree)
             $table->unsignedBigInteger('PARENT_ID')->nullable();
@@ -30,6 +35,7 @@ return new class extends Migration
             $table->string('UPDATED_BY')->nullable();
             $table->string('DELETED_BY')->nullable();
         });
+
     }
 
     /**

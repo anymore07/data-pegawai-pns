@@ -10,11 +10,11 @@
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                    <h2>Data Unit Kerja</h2>
+                    <h2>Data Golongan</h2>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html"><i class="fa fa-dashboard"></i></a></li>
                         <li class="breadcrumb-item">Master Data</li>
-                        <li class="breadcrumb-item active">Unit Kerja</li>
+                        <li class="breadcrumb-item active">Golongan</li>
                     </ul>
                 </div>
             </div>
@@ -22,7 +22,7 @@
 
         <div class="row clearfix">
             <div class="col-lg-12">
-                <div class="card" id="unit_kerja_page">
+                <div class="card" id="golongan_page">
                     <div class="tab-content">
                         <div class="header">
                             @if (session('resp_msg'))
@@ -37,11 +37,11 @@
                             @endif
                             <div class="row">
                                 <div class="col-9">
-                                    <h2>Master Data Unit Kerja</h2>
+                                    <h2>Master Data Golongan</h2>
                                 </div>
                                 <div class="col-3">
                                     <button type="button" class="btn btn-primary float-right" onclick="openModal()">
-                                        Tambah Unit Kerja&nbsp;<i class="fa fa-plus"></i>
+                                        Tambah Golongan&nbsp;<i class="fa fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
@@ -52,9 +52,7 @@
                                     id="basic-datatable" role="grid" style="width: 100% !important;">
                                     <thead>
                                         <tr role="row">
-                                            <th>Nama Unit</th>
-                                            <th>Lokasi</th>
-                                            <th>Parent</th>
+                                            <th>Golongan</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -74,38 +72,19 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="title" id="modalFormLabel">Form Unit Kerja</h4>
+                <h4 class="title" id="modalFormLabel">Form Golongan</h4>
             </div>
-            <form action="<?= url('unit-kerja/submit') ?>" id="form_unit_kerja" method="POST"
-                enctype="multipart/form-data">
+            <form action="<?= url('golongan/submit') ?>" id="form_golongan" method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="hidden" name="id_unit_kerja">
+                <input type="hidden" name="id_golongan">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="nama_unit" class="form-label">Nama Unit <small
+                                <label for="nama_golongan" class="form-label">Nama Golongan <small
                                         class="text-danger">*</small></label>
-                                <input type="text" id="nama_unit" name="nama_unit" class="form-control"
-                                    placeholder="Masukkan nama unit kerja" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="lokasi" class="form-label">Lokasi</label>
-                                <select id="lokasi" name="lokasi" class="form-control select2-kota">
-                                    <option value="">-- Pilih Kota --</option>
-                                    @foreach($kota as $k)
-                                        <option value="{{ $k->ID_KOTA }}">{{ $k->NAMA_KOTA }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="parent_id" class="form-label">Parent Unit</label>
-                                <select id="parent_id" name="parent_id" class="form-control select2-unit-kerja">
-                                    <option value="">-- Tanpa Parent (Root) --</option>
-                                    @foreach ($unit_kerja as $uk)
-                                        <option value="{{ $uk->ID_UNIT_KERJA }}">{{ $uk->NAMA_UNIT }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" id="nama_golongan" name="nama_golongan" class="form-control"
+                                    placeholder="Masukkan golongan" required>
                             </div>
                         </div>
                     </div>
@@ -123,41 +102,41 @@
     $(function () {
         filterData()
 
-        $('.select2-unit-kerja').select2({
+        $('.select2-golongan').select2({
             theme: 'bootstrap4',
-            allowClear: true,
-            placeholder: '-- Pilih Parent --'
+            allowClear: true
         })
+        DropdownOptionTipe($('.select2-golongan'))
 
-        $('.select2-kota').select2({
+        $('.select2-main-golongan').select2({
             theme: 'bootstrap4',
             allowClear: true,
-            placeholder: '-- Pilih Kota --'
+            placeholder: '-- Pilih Golongan --'
         })
+        DropdownOptionTipe($('.select2-main-golongan'))
     });
 
-
     function reset() {
-        $('input[name="id_unit_kerja"]').val('')
-        $('input[name="nama_unit"]').val('')
-        $('input[name="lokasi"]').val('')
-        $('#parent_id').val('').trigger('change')
+        $('input[name="id_golongan"]').val('')
+        $('input[name="nama_golongan"]').val('')
+        $('.select2-golongan').val('').trigger('change')
     }
 </script>
-
 <script>
     function filterData() {
         var element = $('#basic-datatable')
         var totPagesLoad = 2
-        var dataUrl = "<?= url('unit-kerja/all-data') ?>"
+        var dataUrl = "<?= url('golongan/all-data') ?>"
         var dataBody = {
             '_token': $('meta[name="csrf-token"]').attr('content')
         }
         var dataColumn = [
-            { data: 'NAMA_UNIT' },
-            { data: 'LOKASI' },
-            { data: 'PARENT' },
-            { data: 'ACTION_BUTTON' }
+        {
+            data: 'NAMA_GOLONGAN'
+        },
+        {
+            data: 'ACTION_BUTTON'
+        }
         ]
 
         processingDataTable(element, totPagesLoad, dataUrl, dataBody, dataColumn)
@@ -184,7 +163,7 @@
                         Swal.showLoading();
                     }
                 });
-                window.location.href = "unit-kerja/delete" + '/' + id;
+                window.location.href = "golongan/delete" + '/' + id;
             }
         });
     }
@@ -195,16 +174,15 @@
 
         if (rawData) {
             let data = JSON.parse(rawData);
-            $('input[name="id_unit_kerja"]').val(data.ID_UNIT_KERJA);
-            $('input[name="nama_unit"]').val(data.NAMA_UNIT);
-            $('#lokasi').val(data.LOKASI).trigger('change');
-            $('#parent_id').val(data.PARENT_ID).trigger('change');
+            $('input[name="id_golongan"]').val(data.ID_GOLONGAN);
+            $('input[name="nama_golongan"]').val(data.NAMA_GOLONGAN);
         }
     }
 
+
     function submitForm() {
         var isValid = true;
-        var form = $('#form_unit_kerja')[0];
+        var form = $('#form_golongan')[0];
         if (!form.checkValidity()) {
             form.reportValidity();
             isValid = false;
@@ -221,7 +199,7 @@
                     Swal.showLoading();
                 }
             });
-            $('#form_unit_kerja').submit()
+            $('#form_golongan').submit()
         }
     }
 </script>

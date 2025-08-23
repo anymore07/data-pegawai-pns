@@ -14,18 +14,27 @@ class UnitKerjaController extends Controller
 
         $data['unit_kerja'] = DB::select("
             SELECT
-                ID_UNIT_KERJA,
-                NAMA_UNIT,
-                LOKASI,
-                PARENT_ID,
-                CREATED_AT,
-                UPDATED_AT
-            FROM md_unit_kerja
-            WHERE DELETED_AT IS NULL
-              AND DELETED_BY IS NULL
-            ORDER BY ID_UNIT_KERJA DESC
+                uk.ID_UNIT_KERJA,
+                uk.NAMA_UNIT,
+                k.NAMA_KOTA AS LOKASI,
+                uk.PARENT_ID,
+                parent.NAMA_UNIT AS PARENT_NAME,
+                uk.CREATED_AT,
+                uk.UPDATED_AT
+            FROM md_unit_kerja uk
+            LEFT JOIN md_kota k ON k.ID_KOTA = uk.LOKASI
+            LEFT JOIN md_unit_kerja parent ON parent.ID_UNIT_KERJA = uk.PARENT_ID
+            WHERE uk.DELETED_AT IS NULL
+              AND uk.DELETED_BY IS NULL
+            ORDER BY uk.ID_UNIT_KERJA DESC
         ");
 
+         $data['kota'] = DB::table('md_kota')
+        ->whereNull('DELETED_AT')
+        ->whereNull('DELETED_BY')
+        ->orderBy('NAMA_KOTA')
+        ->get();
+        
         return view('layouts.header', $data)
             . view('master.unit_kerja', $data)
             . view('layouts.footer');
@@ -36,7 +45,7 @@ class UnitKerjaController extends Controller
         $req->validate([
             'id_unit_kerja' => 'nullable|integer',
             'nama_unit' => 'required|string|max:255',
-            'lokasi' => 'nullable|string|max:255',
+            'lokasi' => 'nullable|integer', // disimpan sebagai ID_KOTA
             'parent_id' => 'nullable|integer',
         ]);
 
@@ -46,7 +55,7 @@ class UnitKerjaController extends Controller
 
             $payload = [
                 'NAMA_UNIT' => $req->input('nama_unit'),
-                'LOKASI' => $req->input('lokasi'),
+                'LOKASI' => $req->input('lokasi') ?: null, // simpan ID_KOTA
                 'PARENT_ID' => $req->input('parent_id') ?: null,
             ];
 
@@ -102,13 +111,13 @@ class UnitKerjaController extends Controller
         $conds = ["uk.DELETED_AT IS NULL", "uk.DELETED_BY IS NULL"];
         if ($search !== '') {
             $s = addcslashes($search, "%_");
-            $conds[] = "(uk.NAMA_UNIT LIKE '%$s%' OR uk.LOKASI LIKE '%$s%')";
+            $conds[] = "(uk.NAMA_UNIT LIKE '%$s%' OR k.NAMA_KOTA LIKE '%$s%')";
         }
         $where = 'WHERE ' . implode(' AND ', $conds);
 
         $map = [
             'NAMA_UNIT' => 'uk.NAMA_UNIT',
-            'LOKASI' => 'uk.LOKASI',
+            'LOKASI' => 'k.NAMA_KOTA',
             'CREATED_AT' => 'uk.CREATED_AT',
         ];
         $orderParts = ['uk.ID_UNIT_KERJA DESC'];
@@ -118,41 +127,43 @@ class UnitKerjaController extends Controller
         $orderBy = 'ORDER BY ' . implode(', ', array_unique($orderParts));
 
         $results = DB::select("
-        SELECT
-            uk.ID_UNIT_KERJA,
-            uk.NAMA_UNIT,
-            uk.LOKASI,
-            uk.PARENT_ID,
-            parent.NAMA_UNIT AS PARENT_NAME,
-            uk.CREATED_AT
-        FROM md_unit_kerja uk
-        LEFT JOIN md_unit_kerja parent ON parent.ID_UNIT_KERJA = uk.PARENT_ID
-        $where
-        $orderBy
-        LIMIT $start, $perPage
-    ");
+            SELECT
+                uk.ID_UNIT_KERJA,
+                uk.NAMA_UNIT,
+                k.NAMA_KOTA AS LOKASI,
+                uk.PARENT_ID,
+                parent.NAMA_UNIT AS PARENT_NAME,
+                uk.CREATED_AT
+            FROM md_unit_kerja uk
+            LEFT JOIN md_kota k ON k.ID_KOTA = uk.LOKASI
+            LEFT JOIN md_unit_kerja parent ON parent.ID_UNIT_KERJA = uk.PARENT_ID
+            $where
+            $orderBy
+            LIMIT $start, $perPage
+        ");
 
         $Tot = DB::selectOne("
-        SELECT COUNT(1) AS TOTAL
-        FROM md_unit_kerja uk
-        $where
-    ")->TOTAL ?? 0;
+            SELECT COUNT(1) AS TOTAL
+            FROM md_unit_kerja uk
+            LEFT JOIN md_kota k ON k.ID_KOTA = uk.LOKASI
+            $where
+        ")->TOTAL ?? 0;
 
         $data = [];
         foreach ($results as $item) {
             $parse = htmlspecialchars(json_encode($item), ENT_QUOTES, 'UTF-8');
             $data[] = [
                 'NAMA_UNIT' => $item->NAMA_UNIT,
-                'LOKASI' => $item->LOKASI,
+                'LOKASI' => $item->LOKASI ?? '-',
                 'PARENT' => $item->PARENT_NAME ?? '-',
                 'ACTION_BUTTON' => '
-                <button type="button" class="btn btn-warning" onclick="openModal(`' . $parse . '`)">
-                    <i class="fa fa-edit"></i>
-                </button>
-                <button type="button" class="btn btn-danger" onclick="deleteModal(`' . $item->ID_UNIT_KERJA . '`)">
-                    <i class="fa fa-trash-o"></i>
-                </button>
-            ',
+                    <button type="button" class="btn btn-warning" onclick="openModal(`' . $parse . '`)">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="deleteModal(`' . $item->ID_UNIT_KERJA . '`)">
+                        <i class="fa fa-trash-o"></i>
+                    </button>
+                ',
             ];
         }
 
@@ -165,5 +176,4 @@ class UnitKerjaController extends Controller
             'data' => $data,
         ], 200);
     }
-
 }

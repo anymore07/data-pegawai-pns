@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>:: Iconic :: Home</title>
+    <title>{{ $title ?? 'Home' }}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Iconic Bootstrap 4.5.0 Admin Template" />
@@ -23,7 +23,8 @@
 
     <!-- SELECT2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
 
     <!-- DATATABLES CSS (STABLE VERSION 1.13.6) -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" />
@@ -45,7 +46,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
     <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
 
-    
+
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -143,6 +144,7 @@
             color: #fff;
             background-color: #f40000 !important;
         }
+
         .select2-selection__choice__remove {
             color: #fff !important;
         }

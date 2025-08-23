@@ -141,25 +141,20 @@
                                 <li class="{{ $title == 'Unit Kerja' ? 'active' : '' }}">
                                     <a href="{{ url('/unit-kerja') }}">Unit Kerja</a>
                                 </li>
+                                <li class="{{ $title == 'Golongan' ? 'active' : '' }}">
+                                    <a href="{{ url('/golongan') }}">Golongan</a>
+                                </li>
+                                <li class="{{ $title == 'Eselon' ? 'active' : '' }}">
+                                    <a href="{{ url('/eselon') }}">Eselon</a>
+                                </li>
+                                <li class="{{ $title == 'Kota' ? 'active' : '' }}">
+                                    <a href="{{ url('/kota') }}">Kota</a>
+                                </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="{{ url('/customer') }}" class="{{ $title == 'Customer' ? 'active' : '' }}"><i
-                                    class="fa fa-user"></i><span>Customer</span></a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/manajemen_user') }}"
-                                class="{{ $title == 'Manajemen User' ? 'active' : '' }}" class="has-arrow"><i
-                                    class="fa fa-users"></i><span>Manajemen User</span></a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/hak_akses') }}" class="{{ $title == 'Hak Akses' ? 'active' : '' }}"
-                                class="has-arrow"><i class="fa fa-pencil-square-o"></i><span>Detail Hak
-                                    AKses</span></a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/karyawan') }}" class="{{ $title == 'Karyawan' ? 'active' : '' }}"
-                                class="has-arrow"><i class="fa fa-user"></i><span>Karyawan</span></a>
+                            <a href="{{ url('/pegawai') }}" class="{{ $title == 'Pegawai' ? 'active' : '' }}"><i
+                                    class="fa fa-user"></i><span>Pegawai</span></a>
                         </li>
                     </ul>
                 </nav>
