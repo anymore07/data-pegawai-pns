@@ -112,7 +112,6 @@
                                         <tr role="row">
                                             <th>NIP</th>
                                             <th>Nama</th>
-                                            <th>Foto</th>
                                             <th>Tempat Lahir</th>
                                             <th>Tanggal Lahir</th>
                                             <th>Jenis Kelamin</th>
@@ -120,10 +119,12 @@
                                             <th>Eselon</th>
                                             <th>Jabatan</th>
                                             <th>Unit Kerja</th>
+                                            <th>Tempat Tugas</th>
                                             <th>Agama</th>
                                             <th>Alamat</th>
                                             <th>No Telepon</th>
                                             <th>NPWP</th>
+                                            <th>Foto</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -235,7 +236,7 @@
                         </div>
                         <div class="col-md-6 mt-2">
                             <label for="agama" class="form-label">Agama</label>
-                            <select name="agama" id="agama" class="form-control">
+                            <select name="agama" id="agama" class="form-control select2-agama">
                                 <option value="">-- Pilih Agama --</option>
                                 <option value="Islam">Islam</option>
                                 <option value="Kristen">Kristen</option>
@@ -271,9 +272,10 @@
 
 <script>
     $(function () {
-        $('.select2-jk, .select2-golongan, .select2-eselon, .select2-jabatan, .select2-unit, .select2-kota').select2({
+        $('.select2-jk, .select2-golongan, .select2-eselon, .select2-jabatan, .select2-unit, .select2-kota, .select2-agama').select2({
             theme: 'bootstrap4',
             allowClear: true,
+            width: '100%'
         });
     });
 
@@ -313,7 +315,6 @@
             columns: [
                 { data: 'NIP' },
                 { data: 'NAMA_PEGAWAI' },
-                { data: 'FOTO', orderable: false, render: d => d ? `<img src="data:image/png;base64,${d}" style="height:50px">` : '' },
                 { data: 'TEMPAT_LAHIR' },
                 { data: 'TGL_LAHIR' },
                 { data: 'JENIS_KELAMIN', render: d => d === 'L' ? 'Laki-laki' : (d === 'P' ? 'Perempuan' : '') },
@@ -321,10 +322,12 @@
                 { data: 'ESELON' },
                 { data: 'JABATAN' },
                 { data: 'UNIT_KERJA' },
+                { data: 'TEMPAT_TUGAS' },
                 { data: 'AGAMA' },
                 { data: 'ALAMAT' },
                 { data: 'NO_TELEPON' },
                 { data: 'NPWP' },
+                { data: 'FOTO', orderable: false, render: d => d ? `<img src="data:image/png;base64,${d}" style="height:50px">` : '' },
                 { data: 'ACTION_BUTTON', orderable: false, searchable: false }
             ],
             drawCallback: function () { this.api().columns.adjust(); },
@@ -360,19 +363,17 @@
         const $form = $('#form_pegawai');
         $form[0].reset();
 
-        // kosongkan hidden old_nip saja. (Jangan punya 2 name="nip")
         $('input[name="old_nip"]').val('');
 
-        // clear select2
-        $('.select2-jk, .select2-golongan, .select2-eselon, .select2-jabatan, .select2-unit, .select2-kota').val(null).trigger('change');
+        // reset semua select2 termasuk agama
+        $('.select2-jk, .select2-golongan, .select2-eselon, .select2-jabatan, .select2-unit, .select2-kota, .select2-agama')
+            .val(null).trigger('change');
 
-        // clear radio JK
+        // reset radio jenis kelamin
         $('input[name="jenis_kelamin"]').prop('checked', false);
 
-        // clear file
         $('#foto').val('');
 
-        // judul
         $('#modalFormLabel').text('Form Pegawai - Tambah');
     }
     function deleteModal(nip) {
@@ -406,18 +407,26 @@
             $('input[name="nama_pegawai"]').val(data.NAMA_PEGAWAI);
             $('input[name="tempat_lahir"]').val(data.TEMPAT_LAHIR);
             $('input[name="tgl_lahir"]').val(data.TGL_LAHIR);
-            $('input[name="agama"]').val(data.AGAMA);
             $('input[name="no_telepon"]').val(data.NO_TELEPON);
             $('input[name="npwp"]').val(data.NPWP);
-            $('.select2-jk').val(data.JENIS_KELAMIN).trigger('change');
+
+            // set agama
+            $('.select2-agama').val(data.AGAMA).trigger('change');
+
+            // set jenis kelamin (radio button)
+            if (data.JENIS_KELAMIN) {
+                $(`input[name="jenis_kelamin"][value="${data.JENIS_KELAMIN}"]`).prop('checked', true);
+            }
+
+            // set select lain
             $('.select2-golongan').val(data.ID_GOLONGAN).trigger('change');
             $('.select2-eselon').val(data.ID_ESELON).trigger('change');
             $('.select2-jabatan').val(data.ID_JABATAN).trigger('change');
             $('.select2-unit').val(data.ID_UNIT_KERJA).trigger('change');
             $('.select2-kota').val(data.ID_KOTA).trigger('change');
-
         }
     }
+
 
     function submitForm() {
         var form = $('#form_pegawai')[0];

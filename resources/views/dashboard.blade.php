@@ -104,30 +104,6 @@
             </div>
             {{-- ====== ACTIVITY / ANNOUNCEMENTS ====== --}}
             <div class="col-lg-4">
-                <div class="card">
-                    <div class="header">
-                        <h2>Aktivitas Terbaru</h2>
-                    </div>
-                    <div class="body">
-                        @forelse(($activities ?? []) as $a)
-                            <div class="media mb-3">
-                                <div class="align-self-center mr-3">
-                                    <span class="badge badge-{{ $a['color'] ?? 'primary' }}"><i
-                                            class="fa {{ $a['icon'] ?? 'fa-info' }}"></i></span>
-                                </div>
-                                <div class="media-body">
-                                    <h6 class="mt-0 mb-1">{{ $a['title'] ?? '-' }}</h6>
-                                    <div class="text-muted small">{{ $a['desc'] ?? '' }}</div>
-                                    <div class="text-muted small"><i class="fa fa-clock-o"></i> {{ $a['time'] ?? '' }}</div>
-                                </div>
-                            </div>
-                            @if(!$loop->last)
-                            <hr class="my-2">@endif
-                        @empty
-                            <div class="text-muted">Belum ada aktivitas.</div>
-                        @endforelse
-                    </div>
-                </div>
 
                 <div class="card">
                     <div class="header">

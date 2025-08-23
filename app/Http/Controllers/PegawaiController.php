@@ -17,20 +17,36 @@ class PegawaiController extends Controller
     public function index()
     {
         $data['title'] = 'Pegawai';
-
         $data['pegawai'] = DB::select("
-        SELECT p.*, g.NAMA_GOLONGAN, e.NAMA_ESELON, j.NAMA_JABATAN, u.NAMA_UNIT, a.ALAMAT, k.NAMA_KOTA AS TEMPAT_TUGAS
-        FROM tb_pegawai p
-        LEFT JOIN md_golongan g ON p.ID_GOLONGAN = g.ID_GOLONGAN
-        LEFT JOIN md_eselon e ON p.ID_ESELON = e.ID_ESELON
-        LEFT JOIN md_jabatan j ON p.ID_JABATAN = j.ID_JABATAN
-        LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
-        LEFT JOIN tb_alamat a ON p.NIP = a.NIP
-        LEFT JOIN md_kota k ON p.TEMPAT_TUGAS = k.ID_KOTA
-        WHERE p.DELETED_AT IS NULL
-          AND p.DELETED_BY IS NULL
-        ORDER BY p.NIP DESC
-    ");
+  SELECT p.*,
+         g.NAMA_GOLONGAN,
+         e.NAMA_ESELON,
+         j.NAMA_JABATAN,
+         u.NAMA_UNIT,
+         a.ALAMAT,
+         k.NAMA_KOTA AS TEMPAT_TUGAS
+  FROM tb_pegawai p
+  LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
+  LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
+  LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
+  LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
+  LEFT JOIN (
+      SELECT ta.*
+      FROM tb_alamat ta
+      JOIN (
+          SELECT NIP, MAX(ID_ALAMAT) AS ID_ALAMAT
+          FROM tb_alamat
+          WHERE DELETED_AT IS NULL
+          GROUP BY NIP
+      ) last ON last.NIP = ta.NIP AND last.ID_ALAMAT = ta.ID_ALAMAT
+      WHERE ta.DELETED_AT IS NULL
+  ) a ON a.NIP = p.NIP
+  LEFT JOIN md_kota k ON p.TEMPAT_TUGAS = k.ID_KOTA
+  WHERE p.DELETED_AT IS NULL
+    AND p.DELETED_BY IS NULL
+  ORDER BY p.NIP DESC
+");
+
 
         // Ambil data master untuk dropdown
         $data['golongan'] = DB::table('md_golongan')->whereNull('DELETED_AT')->get();
@@ -57,6 +73,7 @@ class PegawaiController extends Controller
             'id_eselon' => 'nullable|integer',
             'id_jabatan' => 'nullable|integer',
             'id_unit_kerja' => 'nullable|integer',
+            'tempat_tugas' => 'nullable|string|max:100',
             'agama' => 'nullable|string|max:100',
             'no_telepon' => 'nullable|string|max:50',
             'npwp' => 'nullable|string|max:50',
@@ -75,6 +92,7 @@ class PegawaiController extends Controller
                 'ID_ESELON' => $req->input('id_eselon'),
                 'ID_JABATAN' => $req->input('id_jabatan'),
                 'ID_UNIT_KERJA' => $req->input('id_unit_kerja'),
+                'TEMPAT_TUGAS' => $req->input('tempat_tugas'),
                 'AGAMA' => $req->input('agama'),
                 'NO_TELEPON' => $req->input('no_telepon'),
                 'NPWP' => $req->input('npwp'),
@@ -89,7 +107,9 @@ class PegawaiController extends Controller
                 // ===================== UPDATE =====================
                 // Kalau ganti NIP → cek apakah NIP baru sudah dipakai
                 if ($oldNip != $nip) {
-                    $cekNip = DB::table('tb_pegawai')->where('NIP', $nip)->first();
+                    $cekNip = DB::table(
+                        'tb_pegawai'
+                    )->where('NIP', $nip)->first();
                     if ($cekNip) {
                         return redirect('pegawai')->with('err_msg', 'Gagal mengubah: NIP sudah digunakan!');
                     }
@@ -203,26 +223,38 @@ class PegawaiController extends Controller
 
         // Data rows
         $sql = "
-        SELECT 
-            p.*, 
-            g.NAMA_GOLONGAN, 
-            e.NAMA_ESELON, 
-            j.NAMA_JABATAN, 
-            u.NAMA_UNIT, 
-            a.ALAMAT,
-            k.NAMA_KOTA AS TEMPAT_TUGAS,
-            p.TEMPAT_TUGAS AS ID_KOTA -- penting untuk preselect modal
-        FROM tb_pegawai p
-        LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
-        LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
-        LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
-        LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
-        LEFT JOIN tb_alamat     a ON p.NIP           = a.NIP
-        LEFT JOIN md_kota       k ON k.ID_KOTA       = p.TEMPAT_TUGAS
-        $where
-        $orderBy
-        LIMIT $start, $perPage
-    ";
+SELECT 
+    p.*, 
+    g.NAMA_GOLONGAN, 
+    e.NAMA_ESELON, 
+    j.NAMA_JABATAN, 
+    u.NAMA_UNIT, 
+    a.ALAMAT,
+    k.NAMA_KOTA AS TEMPAT_TUGAS,
+    p.TEMPAT_TUGAS AS ID_KOTA
+FROM tb_pegawai p
+LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
+LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
+LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
+LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
+/* === ALAMAT TERBARU SAJA === */
+LEFT JOIN (
+    SELECT ta.*
+    FROM tb_alamat ta
+    JOIN (
+        SELECT NIP, MAX(ID_ALAMAT) AS ID_ALAMAT
+        FROM tb_alamat
+        WHERE DELETED_AT IS NULL
+        GROUP BY NIP
+    ) last ON last.NIP = ta.NIP AND last.ID_ALAMAT = ta.ID_ALAMAT
+    WHERE ta.DELETED_AT IS NULL
+) a ON a.NIP = p.NIP
+LEFT JOIN md_kota       k ON k.ID_KOTA       = p.TEMPAT_TUGAS
+$where
+$orderBy
+LIMIT $start, $perPage
+";
+
         $results = DB::select($sql, $binds);
 
         // Total (tanpa LIMIT) — cukup di tb_pegawai, karena filter by FK ada di kolom p.*
@@ -249,7 +281,7 @@ class PegawaiController extends Controller
                 'ALAMAT' => $item->ALAMAT,
                 'FOTO' => $item->FOTO,
                 'ACTION_BUTTON' => '
-                <button type="button" class="btn btn-info" onclick="window.location.href=\'pegawai/alamat/' . $item->NIP . '\'">Alamat</button>
+                <button type="button" class="btn btn-info" onclick="window.location.href=\'pegawai/alamat/' . $item->NIP . '\'"> <i class="fa fa-home"></i></button>
                 <button type="button" class="btn btn-warning" onclick="openModal(`' . $parse . '`)">
                     <i class="fa fa-edit"></i>
                 </button>
@@ -308,20 +340,32 @@ class PegawaiController extends Controller
         $where = 'WHERE ' . implode(' AND ', $conds);
 
         $sql = "
-        SELECT 
-            p.NIP, p.NAMA_PEGAWAI, p.TEMPAT_LAHIR, p.TGL_LAHIR, p.JENIS_KELAMIN,
-            g.NAMA_GOLONGAN, e.NAMA_ESELON, j.NAMA_JABATAN, u.NAMA_UNIT,
-            k.NAMA_KOTA AS TEMPAT_TUGAS, p.AGAMA, p.NO_TELEPON, p.NPWP, a.ALAMAT
-        FROM tb_pegawai p
-        LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
-        LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
-        LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
-        LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
-        LEFT JOIN md_kota       k ON p.TEMPAT_TUGAS  = k.ID_KOTA
-        LEFT JOIN tb_alamat     a ON p.NIP           = a.NIP
-        $where
-        ORDER BY p.NIP DESC
-    ";
+SELECT 
+    p.NIP, p.NAMA_PEGAWAI, p.TEMPAT_LAHIR, p.TGL_LAHIR, p.JENIS_KELAMIN,
+    g.NAMA_GOLONGAN, e.NAMA_ESELON, j.NAMA_JABATAN, u.NAMA_UNIT,
+    k.NAMA_KOTA AS TEMPAT_TUGAS, p.AGAMA, p.NO_TELEPON, p.NPWP, a.ALAMAT
+FROM tb_pegawai p
+LEFT JOIN md_golongan   g ON p.ID_GOLONGAN   = g.ID_GOLONGAN
+LEFT JOIN md_eselon     e ON p.ID_ESELON     = e.ID_ESELON
+LEFT JOIN md_jabatan    j ON p.ID_JABATAN    = j.ID_JABATAN
+LEFT JOIN md_unit_kerja u ON p.ID_UNIT_KERJA = u.ID_UNIT_KERJA
+/* === ALAMAT TERBARU SAJA === */
+LEFT JOIN (
+    SELECT ta.*
+    FROM tb_alamat ta
+    JOIN (
+        SELECT NIP, MAX(ID_ALAMAT) AS ID_ALAMAT
+        FROM tb_alamat
+        WHERE DELETED_AT IS NULL
+        GROUP BY NIP
+    ) last ON last.NIP = ta.NIP AND last.ID_ALAMAT = ta.ID_ALAMAT
+    WHERE ta.DELETED_AT IS NULL
+) a ON a.NIP = p.NIP
+LEFT JOIN md_kota       k ON p.TEMPAT_TUGAS  = k.ID_KOTA
+$where
+ORDER BY p.NIP DESC
+";
+
         $rows = DB::select($sql, $binds);
 
         // Spreadsheet

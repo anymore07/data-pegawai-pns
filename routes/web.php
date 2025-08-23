@@ -7,16 +7,13 @@ use App\Http\Controllers\{
     AlamatController, KotaController, AuthController
 };
 
-/* ==== GUEST (belum login) ==== */
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])
         ->name('login.post')->middleware('throttle:5,1');
 });
 
-/* ==== AUTH (sudah login) ==== */
 Route::middleware('auth')->group(function () {
-    // Dashboard / root
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Jabatan

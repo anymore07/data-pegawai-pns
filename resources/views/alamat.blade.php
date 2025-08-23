@@ -4,7 +4,9 @@
     <div class="container-fluid">
         <div class="block-header">
             <h2>Alamat Pegawai: {{ $pegawai->NAMA_PEGAWAI ?? '-' }}</h2>
-            <button type="button" class="btn btn-secondary" onclick="window.history.back()">Kembali</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='/pegawai'">
+                Kembali
+            </button>
         </div>
 
         <div class="row clearfix">
@@ -33,7 +35,7 @@
                         <div class="body">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover js-basic-example table-custom"
-                                       id="basic-datatable" role="grid" style="width: 100% !important;">
+                                    id="basic-datatable" role="grid" style="width: 100% !important;">
                                     <thead>
                                         <tr role="row">
                                             <th>Alamat</th>
@@ -67,7 +69,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label for="alamat" class="form-label">Alamat <small class="text-danger">*</small></label>
-                            <textarea id="alamat" name="alamat" class="form-control" rows="4" placeholder="Masukkan alamat" required></textarea>
+                            <textarea id="alamat" name="alamat" class="form-control" rows="4"
+                                placeholder="Masukkan alamat" required></textarea>
                         </div>
                     </div>
                 </div>
@@ -93,7 +96,7 @@
     function filterData() {
         var element = $('#basic-datatable');
         var totPagesLoad = 2;
-        var dataUrl = "{{ url('alamat/all-data/'.$nip) }}";
+        var dataUrl = "{{ url('alamat/all-data/' . $nip) }}";
         var dataBody = {
             '_token': $('meta[name="csrf-token"]').attr('content')
         };
