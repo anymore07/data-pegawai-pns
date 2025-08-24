@@ -151,7 +151,6 @@ TEXT;
     }
 
 
-    // Buat cuplikan perubahan pertama (untuk preview replace)
     private function firstDiffPreview(string $old, string $new, int $radius = 60): string
     {
         $len = min(strlen($old), strlen($new));

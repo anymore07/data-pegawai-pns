@@ -83,6 +83,10 @@
                             <a href="{{ url('/pegawai') }}" class="{{ $title == 'Pegawai' ? 'active' : '' }}"><i
                                     class="fa fa-user"></i><span>Pegawai</span></a>
                         </li>
+                        <li>
+                            <a href="{{ url('/article-tool') }}" class="{{ $title == 'Article' ? 'active' : '' }}"><i
+                                    class="fa fa-file-text"></i><span>Article</span></a>
+                        </li>
                     </ul>
                 </nav>
             </div>

@@ -2,9 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    DashboardController, JabatanController, UnitKerjaController,
-    GolonganController, EselonController, PegawaiController,
-    AlamatController, KotaController, AuthController, ArticleToolController
+    DashboardController,
+    JabatanController,
+    UnitKerjaController,
+    GolonganController,
+    EselonController,
+    PegawaiController,
+    AlamatController,
+    KotaController,
+    AuthController,
+    ArticleToolController
 };
 
 Route::middleware('guest')->group(function () {
@@ -59,11 +66,11 @@ Route::middleware('auth')->group(function () {
     Route::get('kota/delete/{id}', [KotaController::class, 'delete']);
     Route::post('kota/all-data', [KotaController::class, 'get_all_data']);
 
+    //Artikel Tools
+    Route::get('/article-tool', [ArticleToolController::class, 'index']);
+    Route::post('/article-tool/run', [ArticleToolController::class, 'run'])->name('artikel.run');
+
     // Logout (tetap di area auth)
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-
-
-Route::get('/artikel-tool', [ArticleToolController::class, 'index']);
-Route::post('/artikel-tool/run', [ArticleToolController::class, 'run'])->name('artikel.run');
