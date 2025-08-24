@@ -1,13 +1,10 @@
 @include('layouts.sidebar')
-
-{{-- libs yang sudah umum dipakai di template-mu --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <link rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <style>
-  /* sentuhan kecil agar textarea dan list hasil enak dibaca, tetap mengikuti theme */
   .words-3col { columns: 3; column-gap: 24px; }
   .pre-like   { white-space: pre-wrap; background:#f8f9fa; border:1px dashed #e9ecef; border-radius:8px; padding:10px }
   .gap-8 > * { margin-right: .5rem; margin-bottom: .5rem; }
@@ -16,7 +13,6 @@
 
 <div id="main-content">
   <div class="container-fluid">
-    {{-- HEADER --}}
     <div class="block-header">
       <div class="row">
         <div class="col-12 d-flex align-items-center justify-content-between">
@@ -25,8 +21,6 @@
       </div>
       <small class="text-muted">Fitur: cari kata (hitungan), ganti kata (replace), urutkan kata (A–Z).</small>
     </div>
-
-    {{-- FLASH MESSAGE --}}
     @if(session('resp_msg'))
       <div class="alert alert-success">{{ session('resp_msg') }}</div>
     @endif
@@ -43,11 +37,9 @@
         </ul>
       </div>
     @endif
-
     <div class="row clearfix">
       <div class="col-lg-12">
         <div class="card">
-          {{-- CARD HEADER --}}
           <div class="header">
             <div class="row">
               <div class="col-12">
@@ -55,21 +47,15 @@
               </div>
             </div>
           </div>
-
-          {{-- CARD BODY --}}
           <div class="body">
             <form method="post" action="{{ route('artikel.run') }}">
               @csrf
-
-              {{-- ARTIKEL --}}
               <div class="form-group">
                 <label for="article" class="font-weight-bold">Artikel</label>
                 <textarea id="article" name="article" rows="12" class="form-control"
                           placeholder="Tempel/ubah artikel di sini.">{{ old('article', $article) }}</textarea>
                 <small class="text-muted">Tempel teks artikel lalu jalankan salah satu aksi di bawah.</small>
               </div>
-
-              {{-- AKSI: SEARCH / REPLACE / SORT --}}
               <div class="row">
                 <div class="col-lg-4">
                   <div class="card mb-3">
@@ -125,7 +111,6 @@
               </div>
             </form>
 
-            {{-- HASIL --}}
             @if ($result)
               <div class="card mt-3">
                 <div class="header">
@@ -158,8 +143,8 @@
                 </div>
               </div>
             @endif
-          </div> {{-- /body --}}
-        </div> {{-- /card --}}
+          </div> 
+        </div> 
       </div>
     </div>
   </div>
