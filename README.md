@@ -7,55 +7,101 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Sistem Data Pegawai & Olah Artikel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Aplikasi berbasis Laravel untuk mengelola data pegawai dan mengolah artikel teks, meliputi:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- CRUD Pegawai
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Master Data (Jabatan, Unit Kerja, Golongan, dll)
 
-## Learning Laravel
+- Upload foto pegawai
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Fitur filter dan pencarian
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Penggantian Kata (Replace)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Pengurutan Kata (Sort)
+## Tech Stack
+- Backend: laravel 12
+- Database: MySQL
+- Frontend: Bootstrap 4
+- Server: PHP8.2+, composer
+## Installation
 
-## Laravel Sponsors
+1. Clone Repository [project](https://github.com/anymore07/data-pegawai-pns.git).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/anymore07/data-pegawai-pns.git
+cd data-pegawai-pns
+```
+2. Install dependencies
+```bash
+composer install
+```
+3. Copy file .env.example menjadi .env
+```bash
+cp .env.example .env
+```
+4. Generate key
+```bash
+php artisan key:generate
+```
+5. Setting koneksi database di .env
+```bash
+DB_DATABASE=datapns
+DB_USERNAME=root
+DB_PASSWORD=
+```
+6. Jalankan migrasi
+```bash
+php artisan migrate --seed
+```
+7. jalankan aplikasi
+```bash
+php artisan serve
+```
+## Akses Login
+Gunakan akun berikut untuk masuk ke aplikasi:
 
-### Premium Partners
+- Email: *superadmin@example.com*
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Password: *super123*
+
+## Cara Penggunaan Sistem Data PNS
+Login ke aplikasi menggunakan akun di atas.
+
+Dashboard akan menampilkan ringkasan data pegawai.
+
+Navigasi menu di sidebar:
+
+- Master Data → Kelola Golongan, Jabatan, Unit Kerja.
+
+- Pegawai → Tambah/Edit/Hapus Data Pegawai.
+
+Form Input/Edit:
+
+- Isi semua field sesuai kebutuhan.
+
+- Untuk foto pegawai, bisa diupload. Saat edit, biarkan kosong jika tidak ingin mengganti.
+
+Logout setelah selesai menggunakan aplikasi.
+## Cara Penggunaan Alat Olah Artikel
+Masuk ke halaman Alat Olah Artikel.
+
+Paste artikel teks ke textarea.
+
+Pilih salah satu aksi:
+
+- Hitung Kata: isi field keyword, klik tombol Hitung → hasil jumlah kemunculan muncul.
+
+- Ganti Kata: isi field dari dan ke, klik tombol Ganti → artikel diperbarui.
+
+- Urutkan Kata: klik tombol Urutkan → daftar kata unik A–Z muncul.
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
+*Chanesya Mey Kusuma*
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
